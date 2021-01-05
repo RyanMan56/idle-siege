@@ -1,7 +1,9 @@
 package com.rbj_games.idle_siege.screens;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -14,12 +16,12 @@ import com.rbj_games.idle_siege.utils.ScaleType;
 
 public class GameScreen extends ScreenAdapter {
 	IdleSiege game;
-	private List<IDrawable> textDrawables;
+	private Map<IDrawable, IDrawable> textDrawables;
 	private GraphRenderer graphRenderer;
 	
 	public GameScreen(IdleSiege game) {
 		this.game = game;
-		textDrawables = new ArrayList<IDrawable>();
+		textDrawables = new HashMap<IDrawable, IDrawable>();
 		graphRenderer = new GraphRenderer(game, textDrawables, new Vector2(10f, 10f), new Vector2(80f, 60f), new Vector2(0f, 5f), new Vector2(0f, 5f), new Vector2(1f, 1f), ScaleType.LINEAR, ScaleType.LOGARITHM);
 	}
 	
@@ -37,7 +39,7 @@ public class GameScreen extends ScreenAdapter {
 		
 		game.batch.setProjectionMatrix(game.textCamera.combined);
 		game.batch.begin();
-		for (IDrawable drawable : textDrawables) {
+		for (IDrawable drawable : textDrawables.values()) {
 			drawable.draw();
 		}
 		game.batch.end();
@@ -46,7 +48,7 @@ public class GameScreen extends ScreenAdapter {
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
-		for (IDrawable drawable : textDrawables) {
+		for (IDrawable drawable : textDrawables.values()) {
 			drawable.resize();
 		}
 	}

@@ -1,6 +1,7 @@
 package com.rbj_games.idle_siege.utils;
 
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -21,11 +22,14 @@ class GraphLabel {
 		this.position = position;
 		this.name = name;
 	}
+	
+	// Override hashCode function if HashMap needs accessing from more than just the object instance
+	// Default hashCode implementation converts memory address of object to an integer
 }
 
 public class GraphRenderer {
 	private IdleSiege game;
-	private List<IDrawable> textDrawables;
+	private Map<IDrawable, IDrawable> textDrawables;
 	private Vector2 position, size, rangeX, rangeY;
 	private ScaleType scaleTypeX, scaleTypeY;
 	private ShapeRenderer shapeRenderer;
@@ -38,7 +42,7 @@ public class GraphRenderer {
 	
 	// In the case of a log scale, the intervals are taken at every processed log.
 	// e.g. interval = 1. 10 ln = 1, 100 ln = 2. 10, 100 get displayed on the axis.
-	public GraphRenderer(IdleSiege game, List<IDrawable> textDrawables, Vector2 position, Vector2 size, Vector2 rangeX, Vector2 rangeY, Vector2 intervals, ScaleType scaleTypeX, ScaleType scaleTypeY) {
+	public GraphRenderer(IdleSiege game, Map<IDrawable, IDrawable> textDrawables, Vector2 position, Vector2 size, Vector2 rangeX, Vector2 rangeY, Vector2 intervals, ScaleType scaleTypeX, ScaleType scaleTypeY) {
 		this.game = game;
 		this.textDrawables = textDrawables;
 		this.position = position;
@@ -56,7 +60,16 @@ public class GraphRenderer {
 			labelsX[i] = new GraphLabel(new Vector2(position.x + (labelGap.x * i), position.y), ""+i); // TODO: calculate what the actual label value is. Or use the label value to calculate the correct offset
 		}
 		
-		textDrawables.add(new TextDrawable(game, new Vector2(50, 50), "Hello!!"));
+		TextDrawable test = new TextDrawable(game, new Vector2(50, 50), "Hello!!");
+		textDrawables.put(test, test);
+		
+		TextDrawable test2 = new TextDrawable(game, new Vector2(20, 20), "Test 2");
+		textDrawables.put(test2, test2);
+		
+		textDrawables.get(test).setText("Resetting text!");
+		
+		textDrawables.get(test2).setText("Changing this text too!");
+		
 	}
 	
 	public void draw() {

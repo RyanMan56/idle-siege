@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 public class TextDrawable implements IDrawable {
 	IdleSiege game;
 	Vector2 worldPos;
-	String text;
+	public String text;
 	BitmapFont font;
 	GlyphLayout layout;
 	Vector3 textPos;
@@ -21,7 +21,7 @@ public class TextDrawable implements IDrawable {
 		font = game.assetManager.get("OpenSans-Light_16.ttf", BitmapFont.class);
 		layout = new GlyphLayout(font, text);
 		
-		Vector3 screenPos = game.camera.project(new Vector3(50f, game.camera.viewportHeight - 50f, 0f)); // Because unproject and project have opposite facing Y-Axis 
+		Vector3 screenPos = game.camera.project(new Vector3(worldPos.x, game.camera.viewportHeight - worldPos.y, 0f)); // Because unproject and project have opposite facing Y-Axis 
 		textPos = game.textCamera.unproject(screenPos);
 	}
 
@@ -31,8 +31,19 @@ public class TextDrawable implements IDrawable {
 	}
 	
 	public void resize() {
-		Vector3 screenPos = game.camera.project(new Vector3(50f, game.camera.viewportHeight - 50f, 0f)); // Because unproject and project have opposite facing Y-Axis 
+		Vector3 screenPos = game.camera.project(new Vector3(this.worldPos.x, game.camera.viewportHeight - this.worldPos.y, 0f)); // Because unproject and project have opposite facing Y-Axis 
 		textPos = game.textCamera.unproject(screenPos);
+	}
+	
+	@Override
+	public void setText(String text) {
+		this.text = text;
+		layout.setText(font, text);
+	}
+	
+	@Override
+	public String getText() {
+		return text;
 	}
 	
 }
