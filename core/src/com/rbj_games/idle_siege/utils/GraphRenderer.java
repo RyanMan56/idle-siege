@@ -1,5 +1,6 @@
 package com.rbj_games.idle_siege.utils;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -14,27 +15,28 @@ import com.rbj_games.idle_siege.IDrawable;
 import com.rbj_games.idle_siege.IdleSiege;
 import com.rbj_games.idle_siege.TextDrawable;
 
-class GraphLabel {
-	Vector2 position;
-	String name;
-	
-	public GraphLabel(Vector2 position, String name) {
-		this.position = position;
-		this.name = name;
-	}
-	
-	// Override hashCode function if HashMap needs accessing from more than just the object instance
-	// Default hashCode implementation converts memory address of object to an integer
-}
+//class GraphLabel {
+//	Vector2 position;
+//	TextDrawable textDrawable;
+//	
+//	public GraphLabel(Vector2 position, TextDrawable textDrawable) {
+//		this.position = position;
+//		this.textDrawable = textDrawable;
+//	}
+//	
+//	// Override hashCode function if HashMap needs accessing from more than just the object instance
+//	// Default hashCode implementation converts memory address of object to an integer
+//}
 
+// If ScaleType is LINEAR_MINUTES then all values are in seconds, but displayed in minutes on the graph
 public class GraphRenderer {
 	private IdleSiege game;
 	private Map<IDrawable, IDrawable> textDrawables;
-	private Vector2 position, size, rangeX, rangeY;
+	private Vector2 position, size, rangeX, rangeY, intervals;
 	private ScaleType scaleTypeX, scaleTypeY;
 	private ShapeRenderer shapeRenderer;
 	private Vector2 labelGap;
-	private GraphLabel[] labelsX;
+	private TextDrawable[] labelsX;
 	BitmapFont font;
 	FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open_sans/OpenSans-Light.ttf"));
 	FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
@@ -47,29 +49,31 @@ public class GraphRenderer {
 		this.textDrawables = textDrawables;
 		this.position = position;
 		this.size = size;
-		this.rangeX = rangeX;
+		this.rangeX = scaleTypeX == ScaleType.LINEAR_MINUTES ? rangeX.scl(60f) : rangeX;
 		this.rangeY = rangeY;
+		this.intervals = new Vector2(scaleTypeX == ScaleType.LINEAR_MINUTES ? intervals.x * 60f : intervals.x, intervals.y);
 		this.scaleTypeX = scaleTypeX;
 		this.scaleTypeY = scaleTypeY;
 		shapeRenderer = new ShapeRenderer();
-		labelGap = new Vector2(3f, 3f);
+		labelGap = new Vector2(10f, 3f);
 		
-		int labelCount = (int) Math.floor(size.x / labelGap.x);
-		labelsX = new GraphLabel[labelCount];
+		setupXAxisLabels();
+	}
+	
+	private void setupXAxisLabels() {
+		// range - x: from, y: to
+		int labelCount = (int) Math.round((rangeX.y - rangeX.x) / intervals.x) + 1;
+		float ratio = 1f / (labelCount - 1);
+		labelGap.x = size.x * ratio;
+		labelsX = new TextDrawable[labelCount];
 		for (int i = 0; i < labelCount; i++) {
-			labelsX[i] = new GraphLabel(new Vector2(position.x + (labelGap.x * i), position.y), ""+i); // TODO: calculate what the actual label value is. Or use the label value to calculate the correct offset
+			float labelValue = rangeX.x + intervals.x * i;
+			float labelText = scaleTypeX == ScaleType.LINEAR_MINUTES ? labelValue / 60f : labelValue;
+			float posX = Utils.ConvertRanges(rangeX.y, rangeX.x, position.x + size.x, position.x, labelValue);
+			labelsX[i] = new TextDrawable(game, new Vector2(posX, position.y - 2f), ""+labelText);
+//			labelsX[i] = new GraphLabel(new Vector2(position.x + (labelGap.x * i), position.y), ""+i); // TODO: calculate what the actual label value is. Or use the label value to calculate the correct offset
+			textDrawables.put(labelsX[i], labelsX[i]);
 		}
-		
-		TextDrawable test = new TextDrawable(game, new Vector2(50, 50), "Hello!!");
-		textDrawables.put(test, test);
-		
-		TextDrawable test2 = new TextDrawable(game, new Vector2(20, 20), "Test 2");
-		textDrawables.put(test2, test2);
-		
-		textDrawables.get(test).setText("Resetting text!");
-		
-		textDrawables.get(test2).setText("Changing this text too!");
-		
 	}
 	
 	public void draw() {
@@ -81,7 +85,7 @@ public class GraphRenderer {
 		shapeRenderer.circle(50, 50, 1);
 		shapeRenderer.end();
 		
-		float posX = Utils.ConvertRanges(rangeX.y, rangeX.x, position.x + size.x, position.x, 2.5f);
+		float posX = Utils.ConvertRanges(rangeX.y, rangeX.x, position.x + size.x, position.x, 60f);
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(Color.RED);
 		shapeRenderer.circle(posX, position.y, 1f);

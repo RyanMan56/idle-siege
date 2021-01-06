@@ -22,7 +22,12 @@ public class GameScreen extends ScreenAdapter {
 	public GameScreen(IdleSiege game) {
 		this.game = game;
 		textDrawables = new HashMap<IDrawable, IDrawable>();
-		graphRenderer = new GraphRenderer(game, textDrawables, new Vector2(10f, 10f), new Vector2(80f, 60f), new Vector2(0f, 5f), new Vector2(0f, 5f), new Vector2(1f, 1f), ScaleType.LINEAR, ScaleType.LOGARITHM);
+		Vector2 position = new Vector2(10f, 10f);
+		Vector2 size = new Vector2(80f, 60f);
+		Vector2 rangeX = new Vector2(0f, 5f);
+		Vector2 rangeY = new Vector2(0f, 5f);
+		Vector2 intervals = new Vector2(1f, 1f);
+		graphRenderer = new GraphRenderer(game, textDrawables, position, size, rangeX, rangeY, intervals, ScaleType.LINEAR_MINUTES, ScaleType.LOGARITHM);
 	}
 	
 	@Override

@@ -18,7 +18,7 @@ public class TextDrawable implements IDrawable {
 		this.worldPos = worldPos;
 		this.text = text;
 		
-		font = game.assetManager.get("OpenSans-Light_16.ttf", BitmapFont.class);
+		font = game.assetManager.get("OpenSans-Light_Small.ttf", BitmapFont.class);
 		layout = new GlyphLayout(font, text);
 		
 		Vector3 screenPos = game.camera.project(new Vector3(worldPos.x, game.camera.viewportHeight - worldPos.y, 0f)); // Because unproject and project have opposite facing Y-Axis 
@@ -44,6 +44,12 @@ public class TextDrawable implements IDrawable {
 	@Override
 	public String getText() {
 		return text;
+	}
+	
+	@Override
+	public void setPosition(Vector2 pos) {
+		this.worldPos = pos;
+		this.resize();
 	}
 	
 }

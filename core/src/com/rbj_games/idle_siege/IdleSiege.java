@@ -57,9 +57,9 @@ public class IdleSiege extends Game {
 		
 		FreeTypeFontLoaderParameter size1Params = new FreeTypeFontLoaderParameter();
 		size1Params.fontFileName = "fonts/open_sans/OpenSans-Light.ttf";
-		size1Params.fontParameters.size = 16;
+		size1Params.fontParameters.size = 14;
 		size1Params.fontParameters.color = Color.BLACK;
-		assetManager.load("OpenSans-Light_16.ttf", BitmapFont.class, size1Params);
+		assetManager.load("OpenSans-Light_Small.ttf", BitmapFont.class, size1Params);
 	}
 
 	@Override
