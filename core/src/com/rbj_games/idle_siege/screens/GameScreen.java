@@ -27,7 +27,7 @@ public class GameScreen extends ScreenAdapter {
 		Vector2 rangeX = new Vector2(0f, 5f);
 		Vector2 rangeY = new Vector2(0f, 5f);
 		Vector2 intervals = new Vector2(1f, 1f);
-		graphRenderer = new GraphRenderer(game, textDrawables, position, size, rangeX, rangeY, intervals, ScaleType.LINEAR_MINUTES, ScaleType.LOGARITHM);
+		graphRenderer = new GraphRenderer(game, textDrawables, position, size, rangeX, rangeY, intervals, ScaleType.LINEAR, ScaleType.LINEAR);
 	}
 	
 	@Override

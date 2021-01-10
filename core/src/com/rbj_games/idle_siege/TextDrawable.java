@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.rbj_games.idle_siege.utils.Enums.Align;
+import com.rbj_games.idle_siege.utils.Enums.Axis;
 
 public class TextDrawable implements IDrawable {
 	IdleSiege game;
@@ -13,14 +15,6 @@ public class TextDrawable implements IDrawable {
 	GlyphLayout layout;
 	Vector3 textPos;
 	Align xAlign, yAlign;
-
-	public enum Align {
-		START, CENTER, END
-	}
-
-	public enum Axis {
-		X, Y
-	}
 	
 	public TextDrawable(IdleSiege game, Vector2 worldPos, String text, Align xAlign, Align yAlign) {
 		this.game = game;
