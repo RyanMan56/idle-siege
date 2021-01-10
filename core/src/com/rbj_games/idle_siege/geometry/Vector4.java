@@ -1,4 +1,4 @@
-package geometry;
+package com.rbj_games.idle_siege.geometry;
 
 public class Vector4 {
 	public float x, y, z, w;

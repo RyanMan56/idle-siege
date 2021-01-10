@@ -1,17 +1,12 @@
-package com.rbj_games.idle_siege.utils;
+package com.rbj_games.idle_siege.graphs;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
@@ -21,7 +16,9 @@ import com.rbj_games.idle_siege.TextDrawable;
 import com.rbj_games.idle_siege.utils.Enums.Align;
 import com.rbj_games.idle_siege.utils.Enums.Axis;
 
-import geometry.Vector4;
+import com.rbj_games.idle_siege.geometry.Vector4;
+import com.rbj_games.idle_siege.utils.ScaleType;
+import com.rbj_games.idle_siege.utils.Utils;
 
 // If ScaleType is LINEAR_MINUTES then all values are in seconds, but displayed in minutes on the graph
 public class GraphRenderer {
@@ -34,17 +31,6 @@ public class GraphRenderer {
 	private TextDrawable[] labelsX, labelsY;
 	private Color transparentBlack = new Color(0, 0, 0, 0.2f);
 	private List<Point> points;
-	
-	public class Point {
-		public Vector2 value;
-		public Vector2 position;
-		
-		public Point(Vector2 value, Vector2 position) {
-			this.value = value;
-			this.position = position;
-		}
-	}
-	
 	
 	// In the case of a log scale, the intervals are taken at every processed log.
 	// e.g. interval = 1. 10 ln = 1, 100 ln = 2. 10, 100 get displayed on the axis.
@@ -64,7 +50,7 @@ public class GraphRenderer {
 		dashes = new ArrayList<Vector4>();
 		points = new ArrayList<Point>();
 		
-		setupPoints();
+//		setupPoints();
 
 		setupAxis(this.rangeX, this.intervals.x, this.scaleTypeX, Axis.X);
 		setupAxis(this.rangeY, this.intervals.y, this.scaleTypeY, Axis.Y);
@@ -130,24 +116,41 @@ public class GraphRenderer {
 			curLen += (dashes.x + dashes.y);
 		}
    }
-	
-	private void setupPoints() {
-		ArrayList<Vector2> values = new ArrayList<Vector2>();
-		values.add(new Vector2(0, 0));
-		values.add(new Vector2(1, 1));
-		values.add(new Vector2(2, 3));
-		values.add(new Vector2(2.5f, 2.5f));
-		values.add(new Vector2(3, 5));
-		values.add(new Vector2(4, 2));
-		values.add(new Vector2(2, 1.5f));
-		values.add(new Vector2(5, 1));
-		
-		for (Vector2 val : values) {
-			float posX = Utils.ConvertRanges(rangeX.y, rangeX.x, position.x + size.x, position.x, val.x);
-			float posY = Utils.ConvertRanges(rangeY.y, rangeY.x, position.y + size.y, position.y, val.y);
-			points.add(new Point(val, new Vector2(posX, posY)));
+
+   private float plotPoint(ScaleType scaleType, float value, Vector2 range, float position, float size) {
+		switch (scaleType) {
+			case LOGARITHM:
+				return Utils.ConvertRanges(range.y, range.x, position + size, position, (float) Math.log10(value));
+			default:
+				return Utils.ConvertRanges(range.y, range.x, position + size, position, value);
 		}
-	}
+   }
+
+   public void addPoint(Vector2 value) {
+		float posX = plotPoint(scaleTypeX, value.x, rangeX, position.x, size.x);
+		float posY = plotPoint(scaleTypeY, value.y, rangeY, position.y, size.y);
+	   	points.add(new Point(value, new Vector2(posX, posY)));
+   }
+	
+//	private void setupPoints() {
+//		ArrayList<Vector2> values = new ArrayList<Vector2>();
+//		values.add(new Vector2(0, 0));
+//		values.add(new Vector2(1, 10));
+//		values.add(new Vector2(2, 100));
+//		values.add(new Vector2(2.5f, 1000));
+//		values.add(new Vector2(3, 10000));
+//		values.add(new Vector2(4, 1000000));
+//		values.add(new Vector2(5, 10000000));
+//		System.out.println(scaleTypeX+" "+scaleTypeY);
+//
+//		for (Vector2 val : values) {
+////			float posX = Utils.ConvertRanges(rangeX.y, rangeX.x, position.x + size.x, position.x, val.x);
+////			float posY = Utils.ConvertRanges(rangeY.y, rangeY.x, position.y + size.y, position.y, val.y);
+//			float posX = plotPoint(scaleTypeX, val.x, rangeX, position.x, size.x);
+//			float posY = plotPoint(scaleTypeY, val.y, rangeY, position.y, size.y);
+//			points.add(new Point(val, new Vector2(posX, posY)));
+//		}
+//	}
 	
 //	private PolynomialSplineFunction interpolate()
 	
