@@ -41,6 +41,9 @@ public class FileHandler {
         out.flush();
     }
 
+//    https://docs.oracle.com/javase/tutorial/essential/io/notification.html
+//    TODO: Follow this to build a file listener, for the graph Process to read from the file
+
     public void dispose() {
         try {
             fw.close();
