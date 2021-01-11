@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoa
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.rbj_games.idle_siege.screens.GameScreen;
+import com.rbj_games.idle_siege.screens.GraphScreen;
 
 public class IdleSiege extends Game {
 	public AssetManager assetManager;
@@ -27,8 +28,18 @@ public class IdleSiege extends Game {
 	public Viewport viewport;
 	public OrthographicCamera textCamera;
 	private boolean loaded = false;
+	private String targetScreen = "Game";
 	
 	static final int WORLD_WIDTH = 100;
+
+	public IdleSiege() {
+		super();
+	}
+
+	public IdleSiege(String targetScreen) {
+		super();
+		this.targetScreen = targetScreen;
+	}
 	
 	@Override
 	public void create () {
@@ -67,7 +78,14 @@ public class IdleSiege extends Game {
 		super.render();
 		if (!loaded) {			
 			if (assetManager.update()) {
-				setScreen(new GameScreen(this));
+				switch (targetScreen) {
+					case "Graph":
+						setScreen(new GraphScreen(this));
+						break;
+					default:
+						setScreen(new GameScreen(this));
+						break;
+				}
 				loaded = true;
 			}
 		}

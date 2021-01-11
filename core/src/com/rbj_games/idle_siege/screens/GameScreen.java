@@ -11,54 +11,30 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import com.rbj_games.idle_siege.IDrawable;
 import com.rbj_games.idle_siege.IdleSiege;
+import com.rbj_games.idle_siege.TextDrawable;
+import com.rbj_games.idle_siege.files.FileHandler;
 import com.rbj_games.idle_siege.graphs.GraphRenderer;
 import com.rbj_games.idle_siege.utils.ScaleType;
 
 public class GameScreen extends ScreenAdapter {
 	IdleSiege game;
 	private Map<IDrawable, IDrawable> textDrawables;
-	private GraphRenderer graphRenderer;
-	long startTime = System.currentTimeMillis();
-	int lastX = 0;
+	private FileHandler fileHandler;
 	
 	public GameScreen(IdleSiege game) {
 		this.game = game;
 		textDrawables = new HashMap<IDrawable, IDrawable>();
-		Vector2 position = new Vector2(20f, 10f);
-		Vector2 size = new Vector2(60f, 60f);
-		Vector2 rangeX = new Vector2(0f, 20f);
-		Vector2 rangeY = new Vector2(0f, 10f);
-		Vector2 intervals = new Vector2(1f, 1f);
-		graphRenderer = new GraphRenderer(game, textDrawables, position, size, rangeX, rangeY, intervals, ScaleType.LINEAR, ScaleType.LOGARITHM);
-//		graphRenderer.addPoint(new Vector2(0, 1));
-//		graphRenderer.addPoint(new Vector2(1, 3));
-//		graphRenderer.addPoint(new Vector2(2, 4));
-	}
-
-	private float graphFn(float x) {
-		float y = (float) Math.pow(x, 3);
-//		float y = (float) Math.sin(x);
-//		float y = (float) Math.pow(10, x);
-//		float y = (float) Math.tan(x);
-//		float y = x;
-		return y;
+		fileHandler = new FileHandler();
+		String filename = "process_comms";
+		fileHandler.createFile(filename, true);
+		fileHandler.appendLine("Line 1");
+		fileHandler.appendLine("Line 2!");
 	}
 	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		long totalTime = (System.currentTimeMillis() - startTime) / 1000;
-		System.out.println(totalTime);
-		if (totalTime > 1) {
-			float x = lastX++;
-			graphRenderer.addPoint(new Vector2(x, graphFn(x)));
-			startTime = System.currentTimeMillis();
-		}
-
-
-		graphRenderer.draw();
 		
 		game.batch.setProjectionMatrix(game.camera.combined);
 		game.batch.begin();
@@ -79,5 +55,11 @@ public class GameScreen extends ScreenAdapter {
 		for (IDrawable drawable : textDrawables.values()) {
 			drawable.resize();
 		}
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		fileHandler.dispose();
 	}
 }
