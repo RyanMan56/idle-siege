@@ -17,8 +17,19 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.rbj_games.idle_siege.net.Client;
+import com.rbj_games.idle_siege.net.Server;
 import com.rbj_games.idle_siege.screens.GameScreen;
 import com.rbj_games.idle_siege.screens.GraphScreen;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class IdleSiege extends Game {
 	public AssetManager assetManager;
@@ -29,6 +40,10 @@ public class IdleSiege extends Game {
 	public OrthographicCamera textCamera;
 	private boolean loaded = false;
 	private String targetScreen = "Game";
+	private Boolean isServer = null;
+	private Server server;
+	private Client client;
+	private List<Integer> nums;
 	
 	static final int WORLD_WIDTH = 100;
 
@@ -36,13 +51,49 @@ public class IdleSiege extends Game {
 		super();
 	}
 
-	public IdleSiege(String targetScreen) {
+	public IdleSiege(String targetScreen, boolean isServer) {
 		super();
 		this.targetScreen = targetScreen;
+		this.isServer = isServer;
+
+		if (isServer) {
+			System.out.println("SERVER");
+			server = new Server(this);
+			server.start();
+		} else {
+			System.out.println("CLIENT");
+			client = new Client(this);
+			client.start();
+//			new Thread(client);
+//			client.sendMessage("Yeet");
+		}
 	}
-	
+
+//	private void setupServer() {
+//		Server = new Server(serverSocket, clientSocket, out, in);
+//		try {
+//			serverSocket = new ServerSocket(port);
+//			clientSocket = serverSocket.accept();
+//			out = new PrintWriter(clientSocket.getOutputStream(), true);
+//			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//
+//	private void setupClient() {
+//		try {
+//			clientSocket = new Socket(ip, port);
+//			out = new PrintWriter(clientSocket.getOutputStream(), true);
+//			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+
 	@Override
 	public void create () {
+		nums = new ArrayList<>();
 		loadAssets();
 		batch = new SpriteBatch();
 //		img = new Texture("badlogic.jpg");
@@ -75,6 +126,12 @@ public class IdleSiege extends Game {
 
 	@Override
 	public void render () {
+		if (!isServer) {
+//			client.sendMessage("Hellooo?");
+//			System.out.println(nums.size());
+		} else {
+			server.sendMessage("Hellooo?");
+		}
 		super.render();
 		if (!loaded) {			
 			if (assetManager.update()) {

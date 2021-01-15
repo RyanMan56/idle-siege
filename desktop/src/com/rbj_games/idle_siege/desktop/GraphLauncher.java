@@ -9,6 +9,8 @@ public class GraphLauncher {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = 640;
         config.height = 480;
-        new LwjglApplication(new IdleSiege("Graph"), config);
+        config.x = 20;
+        config.y = 80;
+        new LwjglApplication(new IdleSiege("Graph", false), config);
     }
 }

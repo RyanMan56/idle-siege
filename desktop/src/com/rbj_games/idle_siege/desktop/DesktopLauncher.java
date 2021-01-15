@@ -11,14 +11,15 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 640;
 		config.height = 480;
-		new LwjglApplication(new IdleSiege(), config);
+		config.x = config.width + 40;
+		new LwjglApplication(new IdleSiege("Game", true), config);
 
-		try {
-			int res = JavaProcess.exec(GraphLauncher.class);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			int res = JavaProcess.exec(GraphLauncher.class);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 	}
 }

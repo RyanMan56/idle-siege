@@ -41,13 +41,13 @@ public class GraphScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        long totalTime = (System.currentTimeMillis() - startTime) / 1000;
-        System.out.println(totalTime);
-        if (totalTime > 1) {
-            float x = lastX++;
-            graphRenderer.addPoint(new Vector2(x, graphFn(x)));
-            startTime = System.currentTimeMillis();
-        }
+//        long totalTime = (System.currentTimeMillis() - startTime) / 1000;
+//        System.out.println(totalTime);
+//        if (totalTime > 1) {
+//            float x = lastX++;
+//            graphRenderer.addPoint(new Vector2(x, graphFn(x)));
+//            startTime = System.currentTimeMillis();
+//        }
 
 
         graphRenderer.draw();
