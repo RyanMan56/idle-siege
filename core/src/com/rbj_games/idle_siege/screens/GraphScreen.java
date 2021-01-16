@@ -16,8 +16,6 @@ public class GraphScreen extends ScreenAdapter {
     IdleSiege game;
     private Map<IDrawable, IDrawable> textDrawables;
     private GraphRenderer graphRenderer;
-    long startTime = System.currentTimeMillis();
-    int lastX = 0;
 
     public GraphScreen(IdleSiege game) {
         this.game = game;
@@ -26,14 +24,9 @@ public class GraphScreen extends ScreenAdapter {
         Vector2 size = new Vector2(60f, 60f);
         Vector2 rangeX = new Vector2(0f, 1f);
         Vector2 rangeY = new Vector2(0f, 10f);
-        Vector2 intervals = new Vector2(0.2f, 1f);
+        Vector2 intervals = new Vector2(0.25f, 1f);
         // TODO: Fix intervals for LINEAR_MINUTES
         graphRenderer = new GraphRenderer(game, textDrawables, position, size, rangeX, rangeY, intervals, ScaleType.LINEAR_MINUTES, ScaleType.LOGARITHM);
-    }
-
-    private float graphFn(float x) {
-        float y = (float) Math.pow(x, 3);
-        return y;
     }
 
     @Override
@@ -41,15 +34,7 @@ public class GraphScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-//        long totalTime = (System.currentTimeMillis() - startTime) / 1000;
-//        System.out.println(totalTime);
-//        if (totalTime > 1) {
-//            float x = lastX++;
-//            graphRenderer.addPoint(new Vector2(x, graphFn(x)));
-//            startTime = System.currentTimeMillis();
-//        }
-
-
+        addPointsFromQueue();
         graphRenderer.draw();
 
         game.batch.setProjectionMatrix(game.camera.combined);
@@ -63,6 +48,17 @@ public class GraphScreen extends ScreenAdapter {
             drawable.draw();
         }
         game.batch.end();
+    }
+
+    public void addPointsFromQueue() {
+        if (game.queuedGraphPoints == null) {
+            return;
+        }
+
+        while (game.queuedGraphPoints.size() > 0) {
+            Vector2 point = game.queuedGraphPoints.remove();
+            graphRenderer.addPoint(point);
+        }
     }
 
     @Override

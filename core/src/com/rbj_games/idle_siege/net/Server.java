@@ -1,5 +1,6 @@
 package com.rbj_games.idle_siege.net;
 
+import com.badlogic.gdx.math.Vector2;
 import com.rbj_games.idle_siege.IdleSiege;
 
 import java.io.BufferedReader;
@@ -33,14 +34,14 @@ public class Server extends Thread {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             String test = in.readLine();
-            System.out.println("Server has received: " + test);
-            out.println(test + " reply");
+//            System.out.println("Server has received: " + test);
+//            out.println(test + " reply");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void sendMessage(String message) {
+    public void sendMessage(Object message) {
         if (clientSocket != null && clientSocket.isConnected()) {
             out.println(message);
         }

@@ -20,6 +20,8 @@ public class GameScreen extends ScreenAdapter {
 	IdleSiege game;
 	private Map<IDrawable, IDrawable> textDrawables;
 	private FileHandler fileHandler;
+	long startTime = System.currentTimeMillis();
+	int lastX = 0;
 	
 	public GameScreen(IdleSiege game) {
 		this.game = game;
@@ -35,6 +37,8 @@ public class GameScreen extends ScreenAdapter {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		processNewPoints();
 		
 		game.batch.setProjectionMatrix(game.camera.combined);
 		game.batch.begin();
@@ -47,6 +51,22 @@ public class GameScreen extends ScreenAdapter {
 			drawable.draw();
 		}
 		game.batch.end();
+	}
+
+	private void processNewPoints() {
+		long totalTime = (System.currentTimeMillis() - startTime) / 1000;
+		System.out.println(totalTime);
+		if (totalTime > 1) {
+			float x = lastX++;
+//			graphRenderer.addPoint(new Vector2(x, graphFn(x)));
+			game.server.sendMessage(new Vector2(x, graphFn(x)));
+			startTime = System.currentTimeMillis();
+		}
+	}
+
+	private float graphFn(float x) {
+		float y = (float) Math.pow(x, 3);
+		return y;
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package com.rbj_games.idle_siege.net;
 
+import com.badlogic.gdx.math.Vector2;
 import com.rbj_games.idle_siege.IdleSiege;
 
 import java.io.*;
@@ -29,7 +30,6 @@ public class Client extends Thread {
     }
 
     public void sendMessage(String message) {
-        System.out.println("sending " + message);
         out.println(message);
 //        try {
 //            String resp = in.readLine();
@@ -45,8 +45,12 @@ public class Client extends Thread {
         startConnection();
         String test = null;
         try {
-            test = in.readLine();
-            System.out.println("Client has received: " + test);
+            while((test = in.readLine()) != null) {
+                Vector2 point = new Vector2().fromString(test);
+                if (game.queuedGraphPoints != null) {
+                    game.queuedGraphPoints.add(point);
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

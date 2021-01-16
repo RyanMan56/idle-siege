@@ -42,7 +42,7 @@ public class GraphRenderer {
 		this.size = size;
 		this.rangeX = scaleTypeX == ScaleType.LINEAR_MINUTES ? rangeX.scl(60f) : rangeX;
 		this.rangeY = rangeY;
-		this.intervals = new Vector2(scaleIntervals(scaleTypeX, intervals.y), scaleIntervals(scaleTypeY, intervals.y));
+		this.intervals = new Vector2(scaleIntervals(scaleTypeX, intervals.x), scaleIntervals(scaleTypeY, intervals.y));
 		this.scaleTypeX = scaleTypeX;
 		this.scaleTypeY = scaleTypeY;
 		
@@ -75,6 +75,12 @@ public class GraphRenderer {
 
 	private void setupAxis(Vector2 range, float interval, ScaleType scaleType, Axis axis) {
 		int labelCount = (int) Math.round((range.y - range.x) / interval) + 1;
+
+		if (axis == Axis.X) {
+			System.out.println("interval: " + interval);
+			System.out.println("labelCount: " + labelCount);
+		}
+
 		for (int i = 0; i < labelCount; i++) {
 			float labelValue = range.x + interval * i;
 			float labelText = scaleValue(scaleType, labelValue);
@@ -131,27 +137,7 @@ public class GraphRenderer {
 		float posY = plotPoint(scaleTypeY, value.y, rangeY, position.y, size.y);
 	   	points.add(new Point(value, new Vector2(posX, posY)));
    }
-	
-//	private void setupPoints() {
-//		ArrayList<Vector2> values = new ArrayList<Vector2>();
-//		values.add(new Vector2(0, 0));
-//		values.add(new Vector2(1, 10));
-//		values.add(new Vector2(2, 100));
-//		values.add(new Vector2(2.5f, 1000));
-//		values.add(new Vector2(3, 10000));
-//		values.add(new Vector2(4, 1000000));
-//		values.add(new Vector2(5, 10000000));
-//		System.out.println(scaleTypeX+" "+scaleTypeY);
-//
-//		for (Vector2 val : values) {
-////			float posX = Utils.ConvertRanges(rangeX.y, rangeX.x, position.x + size.x, position.x, val.x);
-////			float posY = Utils.ConvertRanges(rangeY.y, rangeY.x, position.y + size.y, position.y, val.y);
-//			float posX = plotPoint(scaleTypeX, val.x, rangeX, position.x, size.x);
-//			float posY = plotPoint(scaleTypeY, val.y, rangeY, position.y, size.y);
-//			points.add(new Point(val, new Vector2(posX, posY)));
-//		}
-//	}
-	
+
 //	private PolynomialSplineFunction interpolate()
 	
 	public void draw() {

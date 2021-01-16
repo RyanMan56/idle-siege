@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.rbj_games.idle_siege.net.Client;
@@ -29,7 +30,9 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class IdleSiege extends Game {
 	public AssetManager assetManager;
@@ -41,9 +44,10 @@ public class IdleSiege extends Game {
 	private boolean loaded = false;
 	private String targetScreen = "Game";
 	private Boolean isServer = null;
-	private Server server;
-	private Client client;
-	private List<Integer> nums;
+	public Server server;
+	public Client client;
+	public Queue<Vector2> queuedGraphPoints;
+
 	
 	static final int WORLD_WIDTH = 100;
 
@@ -64,36 +68,12 @@ public class IdleSiege extends Game {
 			System.out.println("CLIENT");
 			client = new Client(this);
 			client.start();
-//			new Thread(client);
-//			client.sendMessage("Yeet");
 		}
 	}
 
-//	private void setupServer() {
-//		Server = new Server(serverSocket, clientSocket, out, in);
-//		try {
-//			serverSocket = new ServerSocket(port);
-//			clientSocket = serverSocket.accept();
-//			out = new PrintWriter(clientSocket.getOutputStream(), true);
-//			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	private void setupClient() {
-//		try {
-//			clientSocket = new Socket(ip, port);
-//			out = new PrintWriter(clientSocket.getOutputStream(), true);
-//			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-
 	@Override
 	public void create () {
-		nums = new ArrayList<>();
+		queuedGraphPoints = new LinkedList<>();
 		loadAssets();
 		batch = new SpriteBatch();
 //		img = new Texture("badlogic.jpg");
@@ -128,9 +108,9 @@ public class IdleSiege extends Game {
 	public void render () {
 		if (!isServer) {
 //			client.sendMessage("Hellooo?");
-//			System.out.println(nums.size());
+//			System.out.println(queuedGraphPoints.size());
 		} else {
-			server.sendMessage("Hellooo?");
+//			server.sendMessage("Hellooo?");
 		}
 		super.render();
 		if (!loaded) {			
