@@ -49,7 +49,7 @@ public class IdleSiege extends Game {
 	public Queue<Vector2> queuedGraphPoints;
 
 	
-	static final int WORLD_WIDTH = 100;
+	public static final int WORLD_WIDTH = 100;
 
 	public IdleSiege() {
 		super();

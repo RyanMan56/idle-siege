@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.rbj_games.idle_siege.IDrawable;
 import com.rbj_games.idle_siege.IdleSiege;
 import com.rbj_games.idle_siege.TextDrawable;
+import com.rbj_games.idle_siege.utils.Colors;
 import com.rbj_games.idle_siege.utils.Enums.Align;
 import com.rbj_games.idle_siege.utils.Enums.Axis;
 
@@ -29,7 +30,6 @@ public class GraphRenderer {
 	private ShapeRenderer shapeRenderer;
 	private List<Vector4> dashes;
 	private TextDrawable[] labelsX, labelsY;
-	private Color transparentBlack = new Color(0, 0, 0, 0.2f);
 	private List<Point> points;
 	
 	// In the case of a log scale, the intervals are taken at every processed log.
@@ -148,7 +148,7 @@ public class GraphRenderer {
 		shapeRenderer.setColor(Color.BLACK);
 		shapeRenderer.line(position.x, position.y, position.x + size.x, position.y);
 		shapeRenderer.line(position.x, position.y, position.x, position.y + size.y);
-		shapeRenderer.setColor(transparentBlack);
+		shapeRenderer.setColor(Colors.transparentBlack);
 		for (Vector4 dash : dashes) {
 			shapeRenderer.line(dash.x, dash.y, dash.z, dash.w);
 		}

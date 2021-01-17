@@ -25,7 +25,6 @@ public class GraphScreen extends ScreenAdapter {
         Vector2 rangeX = new Vector2(0f, 1f);
         Vector2 rangeY = new Vector2(0f, 10f);
         Vector2 intervals = new Vector2(0.25f, 1f);
-        // TODO: Fix intervals for LINEAR_MINUTES
         graphRenderer = new GraphRenderer(game, textDrawables, position, size, rangeX, rangeY, intervals, ScaleType.LINEAR_MINUTES, ScaleType.LOGARITHM);
     }
 

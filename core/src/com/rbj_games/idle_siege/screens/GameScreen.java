@@ -1,27 +1,27 @@
 package com.rbj_games.idle_siege.screens;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
+import com.rbj_games.idle_siege.Battlefield;
 import com.rbj_games.idle_siege.IDrawable;
 import com.rbj_games.idle_siege.IdleSiege;
 import com.rbj_games.idle_siege.TextDrawable;
 import com.rbj_games.idle_siege.files.FileHandler;
 import com.rbj_games.idle_siege.graphs.GraphRenderer;
+import com.rbj_games.idle_siege.horde.Horde;
 import com.rbj_games.idle_siege.utils.ScaleType;
 
 public class GameScreen extends ScreenAdapter {
-	IdleSiege game;
+	private IdleSiege game;
 	private Map<IDrawable, IDrawable> textDrawables;
 	private FileHandler fileHandler;
-	long startTime = System.currentTimeMillis();
-	int lastX = 0;
+	private long startTime = System.currentTimeMillis();
+	private int lastX = 0;
+	private Battlefield battlefield;
 	
 	public GameScreen(IdleSiege game) {
 		this.game = game;
@@ -31,6 +31,7 @@ public class GameScreen extends ScreenAdapter {
 		fileHandler.createFile(filename, true);
 		fileHandler.appendLine("Line 1");
 		fileHandler.appendLine("Line 2!");
+		battlefield = new Battlefield(this.game, new ArrayList<Horde>());
 	}
 	
 	@Override
@@ -39,6 +40,7 @@ public class GameScreen extends ScreenAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		processNewPoints();
+		battlefield.render();
 		
 		game.batch.setProjectionMatrix(game.camera.combined);
 		game.batch.begin();
@@ -55,7 +57,6 @@ public class GameScreen extends ScreenAdapter {
 
 	private void processNewPoints() {
 		long totalTime = (System.currentTimeMillis() - startTime) / 1000;
-		System.out.println(totalTime);
 		if (totalTime > 1) {
 			float x = lastX++;
 //			graphRenderer.addPoint(new Vector2(x, graphFn(x)));
@@ -75,6 +76,7 @@ public class GameScreen extends ScreenAdapter {
 		for (IDrawable drawable : textDrawables.values()) {
 			drawable.resize();
 		}
+//		battlefield.resize();
 	}
 
 	@Override
