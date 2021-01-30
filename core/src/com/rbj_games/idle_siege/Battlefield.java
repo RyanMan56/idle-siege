@@ -47,7 +47,8 @@ public class Battlefield {
             horde.render();
         }
 
-        Vector3 touchWorldPos = game.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        // TODO: Remember, this only works because we're using viewport.unproject instead of camera.unproject
+        Vector2 touchWorldPos = game.viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 //        System.out.println(touchWorldPos.x + " : " + touchWorldPos.y);
         System.out.println(tileFromPosition(touchWorldPos.x, touchWorldPos.y));
     }
