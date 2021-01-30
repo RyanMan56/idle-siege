@@ -60,8 +60,10 @@ public class GameScreen extends ScreenAdapter {
 		if (totalTime > 1) {
 			float x = lastX++;
 //			graphRenderer.addPoint(new Vector2(x, graphFn(x)));
-			game.server.sendMessage(new Vector2(x, graphFn(x)));
-			startTime = System.currentTimeMillis();
+			if (game != null && game.server != null) {
+				game.server.sendMessage(new Vector2(x, graphFn(x)));
+				startTime = System.currentTimeMillis();
+			}
 		}
 	}
 
