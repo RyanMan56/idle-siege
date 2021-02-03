@@ -15,8 +15,9 @@ import java.util.List;
 public class Battlefield {
     private IdleSiege game;
     public List<Horde> hordeList;
-    public Tile[][] tiles;
+    public Tile[] tiles;
     private Vector2 interval = new Vector2(10, 10);
+    private Vector2 tileCount;
     private boolean drawGrid = true;
     private List<Vector4> gridLines;
     private ShapeRenderer shapeRenderer;
@@ -27,6 +28,27 @@ public class Battlefield {
 
         shapeRenderer = new ShapeRenderer();
         setupGrid();
+        System.out.println(tileCount);
+    }
+
+    public void setupGrid() { // TODO: Also call this on resize? No, I don't think so
+        float w = Gdx.graphics.getWidth();
+        float h = Gdx.graphics.getHeight();
+        tileCount = new Vector2((float) Math.ceil(IdleSiege.WORLD_WIDTH / interval.x), (float) Math.ceil((IdleSiege.WORLD_WIDTH * (h/w)) / interval.y));
+        tiles = new Tile[(int) tileCount.y * (int) tileCount.x];
+        for (int i = 0; i < tiles.length; i++) {
+            tiles[i] = new Tile(i);
+        }
+
+        gridLines = new ArrayList<>();
+        for (int y = 0; y < tileCount.y; y++) {
+            float yPos = 0 + interval.y * y;
+            gridLines.add(new Vector4(0f, yPos, w, yPos));
+        }
+        for (int x = 0; x < tileCount.x; x++) {
+            float xPos = 0 + interval.x * x;
+            gridLines.add(new Vector4(xPos, 0, xPos, h));
+        }
     }
 
     public void render() {
@@ -50,29 +72,25 @@ public class Battlefield {
         // TODO: Remember, this only works because we're using viewport.unproject instead of camera.unproject
         Vector2 touchWorldPos = game.viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 //        System.out.println(touchWorldPos.x + " : " + touchWorldPos.y);
-        System.out.println(tileFromPosition(touchWorldPos.x, touchWorldPos.y));
-    }
+        System.out.println(tileIndexFromPosition(touchWorldPos.x, touchWorldPos.y));
 
-    public void setupGrid() { // TODO: Also call this on resize? No, I don't think so
-        float w = Gdx.graphics.getWidth();
-        float h = Gdx.graphics.getHeight();
-        Vector2 tileCount = new Vector2((float) Math.ceil(IdleSiege.WORLD_WIDTH / interval.x), (float) Math.ceil((IdleSiege.WORLD_WIDTH * (h/w)) / interval.y));
-        tiles = new Tile[(int) tileCount.y][(int) tileCount.x];
-
-        gridLines = new ArrayList<>();
-        for (int y = 0; y < tileCount.y; y++) {
-            float yPos = 0 + interval.y * y;
-            gridLines.add(new Vector4(0f, yPos, w, yPos));
-        }
-        for (int x = 0; x < tileCount.x; x++) {
-            float xPos = 0 + interval.x * x;
-            gridLines.add(new Vector4(xPos, 0, xPos, h));
-        }
     }
 
     private Vector2 tileFromPosition(float w, float h) {
         return new Vector2((float) Math.floor(w / interval.x), (float) Math.floor(h / interval.y));
     }
+
+    // Grid coord is (0 -> tileCount.x, 0 -> tileCount.y)
+    private int tileIndexFromGridCoord(float x, float y) {
+        return (int) (y * tileCount.x + x);
+    }
+
+    private int tileIndexFromPosition(float w, float h) {
+        Vector2 tileCoord = tileFromPosition(w, h);
+        return tileIndexFromGridCoord(tileCoord.x, tileCoord.y);
+    }
+
+//    private int[]
 
     public void resize() {
         setupGrid();
