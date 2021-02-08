@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.rbj_games.idle_siege.geometry.Vector4;
 import com.rbj_games.idle_siege.horde.Horde;
+import com.rbj_games.idle_siege.horde.monsters.MonsterHorde;
 import com.rbj_games.idle_siege.utils.Colors;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class Battlefield {
 
         shapeRenderer = new ShapeRenderer();
         setupGrid();
-        System.out.println(tileCount);
+        setupHordes();
     }
 
     public void setupGrid() { // TODO: Also call this on resize? No, I don't think so
@@ -51,6 +52,10 @@ public class Battlefield {
         }
     }
 
+    public void setupHordes() {
+        hordeList.add(new MonsterHorde(shapeRenderer));
+    }
+
     public void render() {
         if (drawGrid) {
             Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -65,9 +70,12 @@ public class Battlefield {
             Gdx.gl.glDisable(GL20.GL_BLEND);
         }
 
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (Horde horde : hordeList) {
-            horde.render();
+            horde.update();
+            horde.renderShapes();
         }
+        shapeRenderer.end();
 
         // TODO: Remember, this only works because we're using viewport.unproject instead of camera.unproject
         Vector2 touchWorldPos = game.viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));

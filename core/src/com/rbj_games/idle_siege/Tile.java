@@ -8,12 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tile {
-    public List<IMob> mobsInTile;
+    public List<Mob> mobsInTile;
     public int index;
 
     public Tile(int index) {
         this.index = index;
-//        mobsInTile = new ArrayList<>();
-//        mobsInTile.add(new Goblin());
+        mobsInTile = new ArrayList<>();
     }
 }
